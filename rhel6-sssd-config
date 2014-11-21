@@ -1,0 +1,64 @@
+[sssd]
+config_file_version = 2
+reconnection_retries = 3
+sbus_timeout = 30
+services = nss, pam
+domains = LOCAL,AD
+
+[nss]
+; debug_level = 3
+filter_groups = root
+filter_users = root
+reconnection_retries = 3
+; entry_cache_timeout = 600
+; entry_cache_nowait_timeout = 300
+
+[pam]
+; debug_level = 3
+reconnection_retries = 3
+
+[domain/LOCAL]
+; debug_level = 3
+description = LOCAL Users domain
+id_provider = local
+enumerate = true
+min_id = 400
+max_id = 499
+
+[domain/AD]
+; debug_level = 3
+description = Active Directory Authentication Environment
+enumerate = true
+min_id = 500
+id_provider = ldap
+ldap_uri = ldap://172.168.0.8, ldap://172.168.0.9
+tls_reqcert = never
+ldap_tls_cacertdir = /etc/openldap/cacerts
+ldap_schema = rfc2307bis
+ldap_user_search_base = cn=users,dc=test-lab,dc=local
+ldap_group_search_base = cn=users,dc=test-lab,dc=local
+ldap_default_bind_dn = cn=bind,cn=users,dc=test-lab,dc=local
+ldap_default_authtok_type = password
+ldap_default_authtok = Spencer11
+ldap_user_object_class = person
+ldap_user_name = msSFU30Name
+ldap_user_gecos = name
+ldap_user_uid_number = uidNumber
+ldap_user_gid_number = gidNumber
+ldap_user_home_directory = unixHomeDirectory
+ldap_user_shell = loginShell
+ldap_user_principal = userPrincipalName
+ldap_group_object_class = group
+ldap_group_name = msSFU30Name
+ldap_group_gid_number = gidNumber
+ldap_force_upper_case_realm = True
+auth_provider = krb5
+chpass_provider = krb5
+krb5_server = 172.168.0.8, 172.168.0.9
+krb5_kpasswd = 172.168.0.8, 172.168.0.9
+krb5_kdcip = 172.168.0.8:88 , 172.168.0.9:88
+krb5_realm = TEST-LAB.LOCAL
+krb5_changepw_principal = kadmin/changepw
+krb5_ccachedir = /tmp
+krb5_ccname_template = FILE:%d/krb5cc_%U_XXXXXX
+krb5_auth_timeout = 15
